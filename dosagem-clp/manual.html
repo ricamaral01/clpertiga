@@ -3,125 +3,590 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Manual Completo — Calculadora de Dosagem (PWA-HUB)</title>
+  <title>Guia do Usuário — ConcreTrack · Pertiga</title>
   <style>
     :root {
-      --primary:#1a5276;
-      --primary-light:#2980b9;
-      --accent:#27ae60;
-      --bg:#eef3f7;
+      --dark:#1a1f2e;
+      --dark2:#2c3346;
+      --orange:#e8762a;
+      --orange-light:#f5a05a;
+      --bg:#f0f2f5;
       --card:#ffffff;
-      --text:#22313f;
-      --muted:#5f7286;
-      --border:#d9e2ec;
+      --text:#1a1f2e;
+      --muted:#64748b;
+      --border:#dde3ea;
+      --ok:#16a34a;
+      --warn:#d97706;
+      --err:#dc2626;
     }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
-    header{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;padding:28px 18px}
-    header h1{margin:0;font-size:1.45rem}
-    header p{margin:6px 0 0;opacity:.9}
-    main{max-width:1100px;margin:0 auto;padding:18px}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:14px}
-    .card h2{margin:0 0 10px;color:var(--primary);font-size:1.08rem}
-    .card h3{margin:10px 0 6px;color:var(--primary-light);font-size:.96rem}
-    ul{margin:6px 0 0 18px;padding:0}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+
+    /* ── Header ── */
+    header{background:linear-gradient(135deg,var(--dark) 0%,var(--dark2) 60%,#3a3f52 100%);border-bottom:4px solid var(--orange);padding:0}
+    .hdr-inner{max-width:1140px;margin:0 auto;padding:20px 24px;display:flex;align-items:center;gap:20px}
+    .hdr-inner img{height:52px;width:auto;object-fit:contain;flex-shrink:0}
+    .hdr-title h1{font-size:1.35rem;font-weight:900;color:#fff;letter-spacing:.03em}
+    .hdr-title h1 em{color:var(--orange);font-style:normal}
+    .hdr-title p{font-size:.82rem;color:rgba(255,255,255,.65);margin-top:3px;text-transform:uppercase;letter-spacing:.05em}
+
+    /* ── Layout ── */
+    .page{max-width:1140px;margin:0 auto;padding:24px 20px}
+    .cols{display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:start}
+    @media(max-width:780px){.cols{grid-template-columns:1fr}}
+
+    /* ── Índice lateral ── */
+    .toc{background:var(--dark);border-radius:12px;padding:14px;position:sticky;top:16px}
+    .toc-title{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.45);margin-bottom:10px}
+    .toc a{display:block;color:rgba(255,255,255,.75);text-decoration:none;font-size:.8rem;padding:5px 8px;border-radius:6px;transition:.15s}
+    .toc a:hover{background:rgba(255,255,255,.08);color:#fff}
+    .toc a.grp{color:var(--orange);font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-top:10px;padding:3px 8px;pointer-events:none}
+    .toc a.sub{padding-left:18px}
+
+    /* ── Cards ── */
+    .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:18px;scroll-margin-top:16px}
+    .card-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--border)}
+    .card-hdr .badge{background:var(--orange);color:#fff;font-size:.72rem;font-weight:900;padding:3px 9px;border-radius:999px;flex-shrink:0;letter-spacing:.04em}
+    .card-hdr h2{font-size:1.05rem;font-weight:800;color:var(--dark)}
+    .card-hdr .badge.dark{background:var(--dark)}
+    .card-hdr .badge.ok{background:var(--ok)}
+
+    /* ── Seção interna ── */
+    .sec{margin-bottom:14px}
+    .sec h3{font-size:.88rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--orange);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+    .sec h3::before{content:'';display:inline-block;width:3px;height:14px;background:var(--orange);border-radius:2px}
+
+    p{margin-bottom:8px}
+    ul,ol{margin:6px 0 10px 20px}
     li{margin:4px 0}
-    table{width:100%;border-collapse:collapse;font-size:.92rem}
-    th,td{border:1px solid var(--border);padding:7px 8px;text-align:left;vertical-align:top}
-    th{background:#eaf2fa}
-    .tag{display:inline-block;border-radius:999px;padding:2px 8px;font-size:.78rem;background:#edf6ff;color:#0e4f7a;font-weight:700}
-    code{background:#f5f7fa;padding:2px 6px;border-radius:6px}
+    strong{color:var(--dark)}
+
+    /* ── Tabelas ── */
+    table{width:100%;border-collapse:collapse;font-size:.88rem;margin:8px 0 12px}
+    th{background:var(--dark);color:#fff;padding:8px 10px;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;font-weight:700;text-align:left}
+    td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+    tr:nth-child(even) td{background:#f7f9fb}
+
+    /* ── Tags / Chips ── */
+    .chip{display:inline-block;border-radius:6px;padding:2px 9px;font-size:.77rem;font-weight:700;background:#edf2ff;color:#1e3a8a;border:1px solid #bfcfff;white-space:nowrap}
+    .chip.orange{background:#fff5ed;color:#92400e;border-color:#fbd5a8}
+    code{background:#f1f5f9;padding:2px 7px;border-radius:5px;font-size:.82rem;color:#334155;border:1px solid #e2e8f0}
+
+    /* ── Indicadores de validação ── */
+    .val-row{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
+    .val-pill{display:flex;align-items:center;gap:6px;border-radius:8px;padding:6px 12px;font-size:.82rem;font-weight:700}
+    .val-pill.ok{background:#f0fdf4;border:1px solid #86efac;color:#166534}
+    .val-pill.warn{background:#fffbeb;border:1px solid #fcd34d;color:#92400e}
+    .val-pill.err{background:#fef2f2;border:1px solid #fca5a5;color:#991b1b}
+    .val-pill .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .val-pill.ok .dot{background:#22c55e}
+    .val-pill.warn .dot{background:#f59e0b}
+    .val-pill.err .dot{background:#ef4444}
+
+    /* ── Fluxo de passos ── */
+    .flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:10px 0}
+    .flow-step{background:var(--dark);color:#fff;border-radius:10px;padding:12px 10px;text-align:center}
+    .flow-step .num{font-size:1.3rem;font-weight:900;color:var(--orange);display:block}
+    .flow-step .lbl{font-size:.75rem;margin-top:4px;color:rgba(255,255,255,.8);display:block}
+
+    /* ── Callout ── */
+    .callout{border-left:4px solid var(--orange);background:#fff8f3;border-radius:0 8px 8px 0;padding:10px 14px;margin:10px 0;font-size:.88rem}
+    .callout strong{color:var(--orange)}
+    .callout.info{border-color:#3b82f6;background:#eff6ff}
+    .callout.info strong{color:#1d4ed8}
+
+    /* ── Impressão ── */
+    @media print{
+      header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      .toc{display:none}
+      .cols{grid-template-columns:1fr}
+      .card{break-inside:avoid;border:1px solid #ccc;box-shadow:none}
+      .flow-step{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div style="display:flex;align-items:center;gap:18px;">
-      <div style="background:rgba(255,255,255,0.18);border-radius:10px;padding:6px 12px;flex-shrink:0;">
-        <img src="../assets/img/clp-logo.png" alt="Pertiga" style="height:44px;width:auto;object-fit:contain;display:block;">
-      </div>
-      <div>
-        <h1>📘 Manual Completo — Calculadora de Dosagem (PWA-HUB)</h1>
-        <p>Guia de todas as funcionalidades, botões, armazenamento e fluxo de uso.</p>
-      </div>
+
+<header>
+  <div class="hdr-inner">
+    <img src="../assets/img/clp-logo.png" alt="Pertiga">
+    <div class="hdr-title">
+      <h1>CONCRE<em>TRACK</em> — Guia do Usuário</h1>
+      <p>Sistema de Dosagem de Concreto · Pertiga · Laboratório &amp; Engenharia</p>
     </div>
-  </header>
+  </div>
+</header>
 
-  <main>
-    <section class="card">
-      <h2>1) Objetivo</h2>
-      <p>Este manual descreve toda a operação da calculadora para estudos de dosagem, ensaios laboratoriais e geração de relatórios técnicos para uso no PWA-HUB.</p>
-    </section>
+<div class="page">
+  <div class="cols">
 
-    <section class="card">
-      <h2>2) Estrutura de navegação</h2>
-      <ul>
-        <li><strong>Página Principal:</strong> hub com atalhos para todas as seções.</li>
-        <li><strong>Laboratório:</strong> Massa específica, granulometria miúdo e graúdo.</li>
-        <li><strong>Entrada/Análise:</strong> Materiais, Dosagem, Volume, Argamassa, Empacotamento e Cálculo Inverso.</li>
-        <li><strong>Resultados:</strong> Curva de Abrams, Resumo/Carta, Detalhamento dos Cálculos, Normas e Memória de Cálculo.</li>
-      </ul>
-    </section>
+    <!-- ── Índice lateral ── -->
+    <nav class="toc">
+      <div class="toc-title">Índice</div>
+      <a href="#visao-geral">Visão Geral</a>
+      <a href="#fluxo">Fluxo de Trabalho</a>
+      <a class="grp" href="#">Módulos</a>
+      <a class="sub" href="#cadastro">C1 · Cadastro</a>
+      <a class="sub" href="#materiais">① Materiais</a>
+      <a class="sub" href="#dosagem">② Dosagem 1 m³</a>
+      <a class="sub" href="#inverso">③ Cálculo Inverso</a>
+      <a class="sub" href="#volume">④ Volume</a>
+      <a class="sub" href="#argamassa">⑤ Argamassa</a>
+      <a class="sub" href="#empacotamento">⑥ Empacotamento</a>
+      <a class="sub" href="#laboratorio">Laboratório</a>
+      <a class="sub" href="#tracos">Traços</a>
+      <a class="sub" href="#custos">Custos MCC</a>
+      <a class="sub" href="#resultados">Resultados</a>
+      <a href="#validacoes">Pontos de Validação</a>
+      <a href="#impressao">Impressão / PDF</a>
+      <a href="#armazenamento">Armazenamento</a>
+      <a href="#dicas">Dicas de Uso</a>
+    </nav>
 
-    <section class="card">
-      <h2>3) O que cada botão faz</h2>
-      <table>
-        <thead><tr><th>Seção</th><th>Botão</th><th>Ação</th></tr></thead>
-        <tbody>
-          <tr><td>Massa Específica</td><td><span class="tag">Calcular Massa Específica</span></td><td>Calcula ρ do miúdo (Chapman), ρ seca/SSS/real do graúdo e absorção.</td></tr>
-          <tr><td>Massa Específica</td><td><span class="tag">Aplicar na Dosagem</span></td><td>Transfere massas específicas calculadas para a Aba ① Materiais.</td></tr>
-          <tr><td>Massa Específica</td><td><span class="tag">Salvar Ensaio (local)</span></td><td>Salva no <code>localStorage</code> com chave <code>ensaiosME</code>.</td></tr>
-          <tr><td>Granulometria (miúdo/graúdo)</td><td><span class="tag">Calcular Granulometria</span></td><td>Calcula massa retida média, %retida, acumulada, passante, MF, DMC e valida divergência ≤ 4%.</td></tr>
-          <tr><td>Granulometria (miúdo/graúdo)</td><td><span class="tag">Aplicar na Dosagem</span></td><td>Aplica curva granulométrica na Aba ① Materiais.</td></tr>
-          <tr><td>Granulometria (miúdo/graúdo)</td><td><span class="tag">Salvar Ensaio (local)</span></td><td>Salva localmente com peneiras, resultados e massa específica vinculada.</td></tr>
-          <tr><td>Granulometria (miúdo/graúdo)</td><td><span class="tag">Salvar no Google Sheets</span></td><td>Envia ensaio completo para aba <code>ensaios_granulometria</code> (payload JSON completo).</td></tr>
-          <tr><td>Granulometria (miúdo/graúdo)</td><td><span class="tag">Atualizar Lista</span></td><td>Consulta ensaios salvos na planilha e atualiza select de abertura.</td></tr>
-          <tr><td>Granulometria (miúdo/graúdo)</td><td><span class="tag">Abrir Ensaio</span></td><td>Importa ensaio da planilha, preenche granulometria e massa específica, recalcula resultados e gráfico.</td></tr>
-          <tr><td>Fornecedor</td><td><span class="tag">Salvar Cadastro</span></td><td>Salva localmente e envia para aba <code>fornecedor</code> no Google Sheets.</td></tr>
-          <tr><td>Abrams</td><td><span class="tag">Calcular Curva de Abrams</span></td><td>Calcula e plota resistência x relação a/c para os traços.</td></tr>
-          <tr><td>Resumo</td><td><span class="tag">Gerar Resumo / Carta</span></td><td>Consolida dados de dosagem e projeções em relatório técnico.</td></tr>
-          <tr><td>Resumo</td><td><span class="tag">Salvar JSON</span></td><td>Exporta carta traço para JSON.</td></tr>
-          <tr><td>Memória</td><td><span class="tag">Gerar Memória de Cálculo</span></td><td>Gera relatório detalhado completo com etapas e normas.</td></tr>
-          <tr><td>Várias seções</td><td><span class="tag">Imprimir / Salvar PDF</span></td><td>Ativa layout de impressão enxuto e permite exportação em PDF.</td></tr>
-        </tbody>
-      </table>
-    </section>
+    <!-- ── Conteúdo principal ── -->
+    <div>
 
-    <section class="card">
-      <h2>4) Onde os dados são salvos</h2>
-      <h3>Armazenamento local (navegador)</h3>
-      <ul>
-        <li><code>cadastroFornecedoresV1</code> → cadastro de fornecedores.</li>
-        <li><code>ensaiosME</code> → ensaios de massa específica.</li>
-        <li><code>ensaiosGranMiudo</code> → granulometria miúdo (local).</li>
-        <li><code>ensaiosGranGraudo</code> → granulometria graúdo (local).</li>
-      </ul>
-      <h3>Google Sheets (Web App)</h3>
-      <ul>
-        <li>Aba <code>fornecedor</code> → registros de fornecedores.</li>
-        <li>Aba <code>ensaios_granulometria</code> → ensaios granulométricos com payload completo (inclui massa específica vinculada).</li>
-      </ul>
-    </section>
+      <!-- VISÃO GERAL -->
+      <div class="card" id="visao-geral">
+        <div class="card-hdr">
+          <span class="badge">📌 Visão Geral</span>
+          <h2>O que é o ConcreTrack</h2>
+        </div>
+        <p>O <strong>ConcreTrack</strong> é uma plataforma web desenvolvida pela <strong>Pertiga</strong> para estudo, desenvolvimento e documentação de traços de concreto. Ele cobre todas as etapas do processo: desde o cadastro de materiais e ensaios laboratoriais até a geração de relatórios técnicos e cartas traço prontas para impressão.</p>
+        <p>A ferramenta funciona diretamente no navegador, sem necessidade de instalação. Os dados podem ser armazenados localmente no dispositivo ou sincronizados com o Google Sheets para consulta posterior.</p>
+        <div class="callout info">
+          <strong>Requisito:</strong> Utilize um navegador moderno (Chrome, Edge ou Firefox). Habilite pop-ups para o domínio da ferramenta para que os relatórios sejam gerados corretamente.
+        </div>
+      </div>
 
-    <section class="card">
-      <h2>5) Fluxo recomendado de uso</h2>
-      <ol>
-        <li>Preencher e calcular <strong>Massa Específica</strong>.</li>
-        <li>Executar e salvar <strong>Granulometria Miúdo/Graúdo</strong> (local e/ou Google Sheets).</li>
-        <li>Aplicar dados na Aba ① e ajustar <strong>Dosagem 1 m³</strong>.</li>
-        <li>Validar em <strong>Volume</strong>, <strong>Argamassa</strong>, <strong>Empacotamento</strong> e <strong>Cálculo Inverso</strong>.</li>
-        <li>Gerar <strong>Abrams</strong>, <strong>Resumo/Carta Traço</strong> e <strong>Memória de Cálculo</strong>.</li>
-      </ol>
-    </section>
+      <!-- FLUXO -->
+      <div class="card" id="fluxo">
+        <div class="card-hdr">
+          <span class="badge">▶ Fluxo</span>
+          <h2>Fluxo Recomendado de Trabalho</h2>
+        </div>
+        <div class="flow">
+          <div class="flow-step"><span class="num">1</span><span class="lbl">Cadastrar materiais e fornecedores</span></div>
+          <div class="flow-step"><span class="num">2</span><span class="lbl">Ensaios de laboratório (ρ e granulometria)</span></div>
+          <div class="flow-step"><span class="num">3</span><span class="lbl">Lançar dados em ① Materiais</span></div>
+          <div class="flow-step"><span class="num">4</span><span class="lbl">Montar traço em ② Dosagem 1 m³</span></div>
+          <div class="flow-step"><span class="num">5</span><span class="lbl">Validar em ④ ⑤ ⑥</span></div>
+          <div class="flow-step"><span class="num">6</span><span class="lbl">Gerar Abrams e Carta Traço</span></div>
+          <div class="flow-step"><span class="num">7</span><span class="lbl">Imprimir relatório assinado</span></div>
+        </div>
+        <div class="callout">
+          <strong>Importante:</strong> Cada módulo depende dos dados do módulo anterior. Siga a ordem acima para garantir resultados consistentes.
+        </div>
+      </div>
 
-    <section class="card">
-      <h2>6) Publicação no PWA-HUB</h2>
-      <ul>
-        <li>Publicar a calculadora HTML e este manual no mesmo pacote do hub.</li>
-        <li>Garantir que a URL do Web App Google esteja atualizada no código.</li>
-        <li>Reimplantar o Apps Script sempre que mudar funções <code>doGet/doPost</code>.</li>
-        <li>Validar permissões do deploy: acesso com link e permissões de escrita na planilha.</li>
-      </ul>
-    </section>
-  </main>
+      <!-- C1 CADASTRO -->
+      <div class="card" id="cadastro">
+        <div class="card-hdr">
+          <span class="badge dark">C1</span>
+          <h2>Cadastro de Materiais</h2>
+        </div>
+        <p>Antes de iniciar qualquer cálculo, cadastre os materiais e fornecedores utilizados na usina. Esse cadastro alimenta os módulos de dosagem e de custos MCC automaticamente.</p>
+        <div class="sec">
+          <h3>Como preencher</h3>
+          <ol>
+            <li>Acesse <strong>C1 · Cadastro Materiais</strong> na barra lateral.</li>
+            <li>Clique em <span class="chip">Novo Material</span> e preencha: nome, tipo (cimento, areia, brita, aditivo etc.), fornecedor e preço unitário.</li>
+            <li>Clique em <span class="chip">Salvar Cadastro</span> para registrar localmente e enviar ao Google Sheets.</li>
+          </ol>
+        </div>
+        <div class="callout">
+          <strong>Fornecedores:</strong> O cadastro de fornecedor (CNPJ, razão social, contato) é feito na mesma tela. Use <span class="chip">Salvar Fornecedor</span> para registrar na aba <code>fornecedor</code> da planilha.
+        </div>
+      </div>
+
+      <!-- 1 MATERIAIS -->
+      <div class="card" id="materiais">
+        <div class="card-hdr">
+          <span class="badge">① 🧪</span>
+          <h2>Materiais</h2>
+        </div>
+        <p>Painel central de propriedades físicas dos materiais que compõem o traço.</p>
+        <div class="sec">
+          <h3>Dados necessários por coluna</h3>
+          <table>
+            <thead><tr><th>Material</th><th>Campo</th><th>Intervalo típico</th></tr></thead>
+            <tbody>
+              <tr><td>Cimento</td><td>Massa específica (g/cm³)</td><td>2,80 – 3,20</td></tr>
+              <tr><td>Adição (sílica, fíler…)</td><td>Massa específica (g/cm³)</td><td>1,50 – 3,50</td></tr>
+              <tr><td>Aditivo</td><td>Massa específica (g/cm³)</td><td>0,80 – 1,50</td></tr>
+              <tr><td>Areia Natural</td><td>ρ seca, ρ SSS, ρ real, absorção (%)</td><td>ρ: 2,50 – 2,70</td></tr>
+              <tr><td>Areia Industrial</td><td>ρ seca, ρ SSS, ρ real, absorção (%)</td><td>ρ: 2,60 – 2,75</td></tr>
+              <tr><td>Brita 0 / Brita 1</td><td>ρ seca, ρ SSS, ρ real, absorção (%)</td><td>ρ: 2,60 – 2,80</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="sec">
+          <h3>Importar dados do laboratório</h3>
+          <p>Após executar os ensaios nas abas <strong>L1</strong>, <strong>L2</strong> e <strong>L3</strong>, use o botão <span class="chip">Aplicar na Dosagem</span> em cada módulo para preencher automaticamente os campos correspondentes aqui.</p>
+        </div>
+      </div>
+
+      <!-- 2 DOSAGEM -->
+      <div class="card" id="dosagem">
+        <div class="card-hdr">
+          <span class="badge">② ⚖️</span>
+          <h2>Dosagem 1 m³</h2>
+        </div>
+        <p>Módulo principal de montagem do traço. Defina as quantidades (kg/m³) de cada componente e os parâmetros de projeto do concreto.</p>
+        <div class="sec">
+          <h3>Parâmetros de projeto</h3>
+          <ul>
+            <li><strong>FCK</strong> — resistência característica à compressão (MPa).</li>
+            <li><strong>a/c</strong> — relação água/cimento. Controlada pelo usuário; influencia diretamente a resistência e a durabilidade.</li>
+            <li><strong>Flow / Slump</strong> — consistência desejada (mm). Usada como meta de validação.</li>
+            <li><strong>Volume de produção</strong> — define a escala da betonada (m³ ou L).</li>
+          </ul>
+        </div>
+        <div class="sec">
+          <h3>Composição do traço</h3>
+          <p>Informe as quantidades em <strong>kg por m³</strong> de: cimento, adição, aditivo, areia natural, areia industrial, brita 0 e brita 1. Os totais são calculados automaticamente.</p>
+        </div>
+        <div class="sec">
+          <h3>Comparador de cenários (EV3)</h3>
+          <p>Use os slots <strong>A / B / C</strong> para salvar variações do traço e compará-las lado a lado em custo e parâmetros. Acesse com <span class="chip">Salvar no Slot</span> e compare em <strong>M2 · Comparador</strong>.</p>
+        </div>
+        <div class="callout">
+          <strong>Salvar traço:</strong> use <span class="chip">Salvar Traço</span> para registrar localmente e <span class="chip">Enviar à Planilha</span> para persistir no Google Sheets. Traços salvos ficam acessíveis na seção <strong>T1 · Traços Salvos</strong>.
+        </div>
+      </div>
+
+      <!-- 3 INVERSO -->
+      <div class="card" id="inverso">
+        <div class="card-hdr">
+          <span class="badge">③ 🔄</span>
+          <h2>Cálculo Inverso</h2>
+        </div>
+        <p>Ponto de partida alternativo: a partir de um traço já executado em obra ou laboratório, o módulo calcula os parâmetros derivados (a/c, volume, argamassa) e permite salvar como traço experimental.</p>
+        <div class="sec">
+          <h3>Quando usar</h3>
+          <ul>
+            <li>Retroalimentar a base com traços aprovados em campo.</li>
+            <li>Comparar traço de obra com o traço teórico de dosagem.</li>
+            <li>Validar traços históricos de clientes.</li>
+          </ul>
+        </div>
+        <div class="sec">
+          <h3>Importar dados</h3>
+          <p>Use <span class="chip">Importar da Dosagem 1 m³</span> para preencher automaticamente os campos com o traço atual.</p>
+        </div>
+      </div>
+
+      <!-- 4 VOLUME -->
+      <div class="card" id="volume">
+        <div class="card-hdr">
+          <span class="badge ok">④ 📏</span>
+          <h2>Verificação de Volume</h2>
+        </div>
+        <p>Confirma se a soma dos volumes absolutos dos materiais fecha em <strong>1.000 L/m³</strong>.</p>
+        <div class="sec">
+          <h3>Como interpretar</h3>
+          <div class="val-row">
+            <div class="val-pill ok"><div class="dot"></div> Diferença ≤ 5% — Traço volumetricamente consistente.</div>
+            <div class="val-pill warn"><div class="dot"></div> Diferença 5–15% — Revisar massas específicas e proporções.</div>
+            <div class="val-pill err"><div class="dot"></div> Diferença &gt; 15% — Traço com erro. Não prosseguir.</div>
+          </div>
+        </div>
+        <div class="sec">
+          <h3>Causas comuns de desvio</h3>
+          <ul>
+            <li>Massa específica de algum material incorreta — revisar em <strong>①  Materiais</strong>.</li>
+            <li>Teor de absorção não descontado da água livre.</li>
+            <li>Umidade dos agregados não considerada.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 5 ARGAMASSA -->
+      <div class="card" id="argamassa">
+        <div class="card-hdr">
+          <span class="badge ok">⑤ 🧱</span>
+          <h2>Teor de Argamassa</h2>
+        </div>
+        <p>Calcula o teor de argamassa do traço e compara com a faixa recomendada para o tipo de concreto.</p>
+        <div class="sec">
+          <h3>Parâmetros de validação</h3>
+          <div class="val-row">
+            <div class="val-pill ok"><div class="dot"></div> Desvio ≤ 5% — Dentro da faixa recomendada.</div>
+            <div class="val-pill warn"><div class="dot"></div> Desvio 5–15% — Atenção: pode afetar trabalhabilidade.</div>
+            <div class="val-pill err"><div class="dot"></div> Desvio &gt; 15% — Risco de segregação ou exsudação.</div>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>Referência:</strong> Traços convencionais operam com teor de argamassa entre 45% e 60% (em volume). Concretos de alto desempenho podem sair dessa faixa intencionalmente.
+        </div>
+      </div>
+
+      <!-- 6 EMPACOTAMENTO -->
+      <div class="card" id="empacotamento">
+        <div class="card-hdr">
+          <span class="badge ok">⑥ 📈</span>
+          <h2>Empacotamento Granulométrico</h2>
+        </div>
+        <p>Avalia a curva granulométrica combinada dos agregados em relação à curva alvo (ABNT/referência). O índice RMSE mede o ajuste: quanto menor, melhor.</p>
+        <div class="sec">
+          <h3>Critério de qualidade</h3>
+          <div class="val-row">
+            <div class="val-pill ok"><div class="dot"></div> RMSE &lt; 5 — Curva com excelente aderência ao alvo.</div>
+            <div class="val-pill warn"><div class="dot"></div> RMSE 5–10 — Aceitável, mas revise a proporção de areia/brita.</div>
+            <div class="val-pill err"><div class="dot"></div> RMSE ≥ 10 — Curva fora do alvo. Ajustar proporções.</div>
+          </div>
+          <p style="margin-top:8px">Use os controles de proporção na tela para ajustar a mistura de Areia Natural + Industrial + Britas até atingir RMSE &lt; 5.</p>
+        </div>
+        <div class="callout">
+          <strong>Atenção:</strong> As proporções dos agregados devem somar 100%. O sistema exibe aviso caso contrário.
+        </div>
+      </div>
+
+      <!-- LABORATÓRIO -->
+      <div class="card" id="laboratorio">
+        <div class="card-hdr">
+          <span class="badge dark">Lab</span>
+          <h2>Laboratório (L1 · L2 · L3)</h2>
+        </div>
+
+        <div class="sec">
+          <h3>L1 · Massa Específica</h3>
+          <p>Determine a massa específica de cada material por ensaio laboratorial.</p>
+          <table>
+            <thead><tr><th>Material</th><th>Método</th><th>Resultado</th></tr></thead>
+            <tbody>
+              <tr><td>Agregado miúdo (areia)</td><td>Frasco Chapman (NBR 9776)</td><td>ρ aparente</td></tr>
+              <tr><td>Agregado graúdo (brita)</td><td>Picnometria / imersão (NBR 9937)</td><td>ρ seca, ρ SSS, ρ real, absorção (%)</td></tr>
+            </tbody>
+          </table>
+          <p>Após calcular, clique em <span class="chip">Aplicar na Dosagem</span> para transferir os dados à aba <strong>① Materiais</strong>. Use <span class="chip">Salvar Ensaio (local)</span> para manter o histórico.</p>
+        </div>
+
+        <div class="sec">
+          <h3>L2 · Granulometria Miúdo</h3>
+          <p>Ensaio de peneiramento para areia natural e artificial (NBR 7217).</p>
+          <ul>
+            <li>Informe a massa de cada fração em duas amostras independentes (duplicata).</li>
+            <li>Clique em <span class="chip">Calcular Granulometria</span>: o sistema calcula %retida, %acumulada, %passante, Módulo de Finura (MF) e valida a divergência entre amostras.</li>
+            <li><strong>Validação da duplicata:</strong></li>
+          </ul>
+          <div class="val-row">
+            <div class="val-pill ok"><div class="dot"></div> Divergência ≤ 4% — Ensaio válido conforme NBR.</div>
+            <div class="val-pill err"><div class="dot"></div> Divergência &gt; 4% — Refazer o ensaio.</div>
+          </div>
+          <p style="margin-top:8px">Use <span class="chip">Aplicar na Dosagem</span> para transferir curva e ρ para a coluna "Areia Natural" em <strong>① Materiais</strong>.<br>Use <span class="chip">Salvar no Google Sheets</span> para registrar na planilha e recuperar posteriormente com <span class="chip">Abrir Ensaio</span>.</p>
+        </div>
+
+        <div class="sec">
+          <h3>L3 · Granulometria Graúdo</h3>
+          <p>Mesmo procedimento da L2, com peneiras para britas (9,5 mm a 63 mm). Resultado inclui DMC (Dimensão Máxima Característica). O DMC impacta o consumo de água e a espessura de cobrimento.</p>
+          <p><span class="chip">Aplicar na Dosagem</span> preenche a coluna "Brita 0" em <strong>① Materiais</strong>.</p>
+        </div>
+      </div>
+
+      <!-- TRAÇOS -->
+      <div class="card" id="tracos">
+        <div class="card-hdr">
+          <span class="badge dark">T</span>
+          <h2>Gestão de Traços (T1 · T2 · T3)</h2>
+        </div>
+
+        <div class="sec">
+          <h3>T1 · Traços Salvos</h3>
+          <p>Biblioteca de traços registrados na plataforma. Permite carregar qualquer traço anterior diretamente em <strong>② Dosagem 1 m³</strong> com um clique.</p>
+          <ul>
+            <li>Use <span class="chip">Carregar Traço</span> para abrir em modo de edição.</li>
+            <li>Use <span class="chip">Atualizar Lista</span> para sincronizar com o Google Sheets.</li>
+          </ul>
+        </div>
+
+        <div class="sec">
+          <h3>T2 · Traço Experimental</h3>
+          <p>Registre traços obtidos em concretagem real (obra ou laboratório) com resultados de resistência de corpos de prova. Esses dados alimentam a <strong>Curva de Abrams</strong>.</p>
+        </div>
+
+        <div class="sec">
+          <h3>T3 · Banco de Traços MCC Premium</h3>
+          <p>Base de traços precalibrados com histórico de custo e desempenho. Utilize como ponto de partida ou referência comparativa para novos desenvolvimentos.</p>
+        </div>
+      </div>
+
+      <!-- CUSTOS MCC -->
+      <div class="card" id="custos">
+        <div class="card-hdr">
+          <span class="badge">M 💲</span>
+          <h2>Módulo de Custos MCC (M1 · M2 · M3)</h2>
+        </div>
+        <p>O MCC (Memória de Cálculo de Custo) calcula o custo real por m³ de concreto, deduzindo ICMS e IPI conforme regime tributário (Lucro Presumido).</p>
+
+        <div class="sec">
+          <h3>M1 · Fornecedores / Materiais MCC</h3>
+          <p>Cadastre o preço bruto, alíquota de ICMS e IPI de cada material. O sistema calcula automaticamente o custo líquido (sem impostos recuperáveis).</p>
+        </div>
+
+        <div class="sec">
+          <h3>M2 · Comparador de Custo</h3>
+          <p>Compare até 3 traços (slots A / B / C) em uma tabela unificada. O traço de menor custo é destacado em verde; o de maior custo em vermelho.</p>
+          <ul>
+            <li>Clique em <span class="chip">Salvar no Slot</span> de cada traço em <strong>② Dosagem 1 m³</strong>.</li>
+            <li>Acesse M2 e clique em <span class="chip">🖨️ Imprimir</span> para gerar o relatório comparativo.</li>
+          </ul>
+        </div>
+
+        <div class="sec">
+          <h3>M3 · MCC Traço</h3>
+          <p>Gera a carta traço completa com custo por m³, detalhamento por material, gráficos de composição de massa e custo, e identificação do traço.</p>
+          <p>Use <span class="chip">🖨️ Carta Traço MCC</span> para abrir o relatório em janela de impressão.</p>
+        </div>
+      </div>
+
+      <!-- RESULTADOS -->
+      <div class="card" id="resultados">
+        <div class="card-hdr">
+          <span class="badge">R 📊</span>
+          <h2>Resultados e Relatórios</h2>
+        </div>
+
+        <div class="sec">
+          <h3>⑦ · Curva de Abrams</h3>
+          <p>Plota a relação resistência × relação a/c com base nos traços experimentais registrados em T2. Permite:</p>
+          <ul>
+            <li>Estimar o a/c necessário para atingir um FCK-alvo.</li>
+            <li>Calibrar o parâmetro <strong>A</strong> da equação de Abrams para os materiais da usina.</li>
+          </ul>
+          <p>Clique em <span class="chip">Calcular Curva de Abrams</span> após registrar pelo menos 3 pontos experimentais.</p>
+        </div>
+
+        <div class="sec">
+          <h3>⑧ · Resumo / Carta Traço</h3>
+          <p>Consolida todos os dados em um documento técnico que inclui: parâmetros do traço, composição em kg/m³ e por betonada, resistências, projeções de 28 dias e manutenção.</p>
+          <ul>
+            <li><span class="chip">Gerar Resumo / Carta</span> — exibe na tela.</li>
+            <li><span class="chip">Imprimir Carta Traço</span> — abre janela de impressão com layout oficial Pertiga.</li>
+            <li><span class="chip">Salvar JSON</span> — exporta o traço completo em arquivo para backup ou importação futura.</li>
+          </ul>
+        </div>
+
+        <div class="sec">
+          <h3>R1 · Detalhamento dos Cálculos</h3>
+          <p>Exibe todas as equações e valores intermediários utilizados na dosagem para fins de auditoria e memória técnica.</p>
+        </div>
+
+        <div class="sec">
+          <h3>R2 · Normas de Referência</h3>
+          <p>Painel com as normas NBR aplicáveis: NBR 6118, NBR 12655, NBR 7211, entre outras. Consulte os requisitos normativos sem sair da ferramenta.</p>
+        </div>
+
+        <div class="sec">
+          <h3>R3 · Memória de Cálculo</h3>
+          <p>Gera um relatório extenso e auditável com todas as etapas do processo de dosagem, ideal para envio a órgãos fiscalizadores ou arquivamento técnico.</p>
+        </div>
+      </div>
+
+      <!-- VALIDAÇÕES -->
+      <div class="card" id="validacoes">
+        <div class="card-hdr">
+          <span class="badge">✅ Validação</span>
+          <h2>Pontos de Validação do Sistema</h2>
+        </div>
+        <p>A ferramenta sinaliza automaticamente resultados fora dos limites aceitáveis. A tabela abaixo resume todos os pontos de validação:</p>
+        <table>
+          <thead><tr><th>Módulo</th><th>Parâmetro</th><th style="color:#22c55e">✅ OK</th><th style="color:#f59e0b">⚠️ Atenção</th><th style="color:#ef4444">❌ Erro</th></tr></thead>
+          <tbody>
+            <tr><td>④ Volume</td><td>Diferença para 1.000 L</td><td>≤ 5%</td><td>5 – 15%</td><td>&gt; 15%</td></tr>
+            <tr><td>⑤ Argamassa</td><td>Desvio do teor recomendado</td><td>≤ 5%</td><td>5 – 15%</td><td>&gt; 15%</td></tr>
+            <tr><td>⑥ Empacotamento</td><td>RMSE curva granulométrica</td><td>&lt; 5</td><td>5 – 10</td><td>≥ 10</td></tr>
+            <tr><td>② Dosagem</td><td>Consistência Slump (mm)</td><td>100 – 220</td><td>60 – 250</td><td>Fora da faixa</td></tr>
+            <tr><td>② Dosagem</td><td>Consistência Flow (mm)</td><td>650 – 850</td><td>550 – 900</td><td>Fora da faixa</td></tr>
+            <tr><td>L2 / L3 Gran.</td><td>Divergência entre amostras</td><td>≤ 4%</td><td>—</td><td>&gt; 4%</td></tr>
+            <tr><td>⑥ Empac.</td><td>Soma das proporções</td><td>= 100%</td><td>—</td><td>≠ 100%</td></tr>
+            <tr><td>Custo MCC</td><td>Custo líquido calculado</td><td>ICMS/IPI deduzidos</td><td colspan="2">Verificar alíquotas no M1</td></tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          <strong>Regra geral:</strong> Não gere relatório nem emita carta traço enquanto houver indicadores vermelhos (❌) nos módulos de validação.
+        </div>
+      </div>
+
+      <!-- IMPRESSÃO -->
+      <div class="card" id="impressao">
+        <div class="card-hdr">
+          <span class="badge">🖨️ PDF</span>
+          <h2>Impressão e Geração de PDF</h2>
+        </div>
+        <p>Todos os relatórios seguem o padrão visual oficial <strong>Pertiga · ConcreTrack</strong>, com cabeçalho em banner escuro e rodapé com campos de assinatura.</p>
+        <table>
+          <thead><tr><th>Relatório</th><th>Como acionar</th><th>Conteúdo</th></tr></thead>
+          <tbody>
+            <tr><td>Carta Traço Dosagem</td><td><span class="chip orange">Imprimir Carta Traço</span> em ⑧ Resumo</td><td>Parâmetros, composição kg/m³, betonada, resistências</td></tr>
+            <tr><td>Verificação de Volume</td><td><span class="chip orange">Imprimir</span> em ④ Volume</td><td>Volumes absolutos, gráfico de fechamento</td></tr>
+            <tr><td>Carta Traço MCC</td><td><span class="chip orange">🖨️ Carta Traço MCC</span> em M3</td><td>Custo por material, gráficos de massa e custo</td></tr>
+            <tr><td>Comparativo de Custo</td><td><span class="chip orange">🖨️ Imprimir</span> em M2</td><td>Tabela comparativa slots A/B/C com destaque do menor custo</td></tr>
+            <tr><td>Memória de Cálculo</td><td><span class="chip orange">Gerar Memória</span> em R3</td><td>Relatório completo com todas as etapas e equações</td></tr>
+          </tbody>
+        </table>
+        <div class="sec" style="margin-top:12px">
+          <h3>Como salvar como PDF</h3>
+          <ol>
+            <li>Clique no botão de impressão do relatório desejado.</li>
+            <li>Na janela que abrir, clique em <strong>🖨️ Imprimir / Salvar PDF</strong>.</li>
+            <li>Na caixa de diálogo do navegador, selecione <strong>Salvar como PDF</strong> como destino de impressão.</li>
+            <li>Defina orientação <strong>Retrato</strong> e margens <strong>Padrão</strong>.</li>
+            <li>Clique em <strong>Salvar</strong>.</li>
+          </ol>
+        </div>
+        <div class="callout info">
+          <strong>Assinatura:</strong> Todos os relatórios possuem campos de assinatura para <em>Engenheiro Responsável</em> e <em>Técnico Responsável</em> no rodapé. Imprima, assine e arquive fisicamente conforme exigência do cliente ou norma.
+        </div>
+      </div>
+
+      <!-- ARMAZENAMENTO -->
+      <div class="card" id="armazenamento">
+        <div class="card-hdr">
+          <span class="badge dark">💾 Dados</span>
+          <h2>Armazenamento de Dados</h2>
+        </div>
+        <table>
+          <thead><tr><th>Dado</th><th>Onde fica</th><th>Chave / Aba</th></tr></thead>
+          <tbody>
+            <tr><td>Ensaios de Massa Específica</td><td>Navegador (local)</td><td><code>ensaiosME</code></td></tr>
+            <tr><td>Granulometria Miúdo (local)</td><td>Navegador (local)</td><td><code>ensaiosGranMiudo</code></td></tr>
+            <tr><td>Granulometria Graúdo (local)</td><td>Navegador (local)</td><td><code>ensaiosGranGraudo</code></td></tr>
+            <tr><td>Cadastro de Fornecedores</td><td>Navegador + Planilha</td><td><code>cadastroFornecedoresV1</code> / aba <code>fornecedor</code></td></tr>
+            <tr><td>Granulometria (nuvem)</td><td>Google Sheets</td><td>Aba <code>ensaios_granulometria</code></td></tr>
+            <tr><td>Traços Salvos</td><td>Navegador + Planilha</td><td>Aba <code>tracos</code></td></tr>
+            <tr><td>Comparador MCC (slots A/B/C)</td><td>Navegador (local)</td><td><code>mccComp_v2</code></td></tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          <strong>Atenção:</strong> Dados armazenados <em>apenas localmente</em> (navegador) são perdidos ao limpar o cache do navegador ou ao acessar de outro dispositivo. Use sempre <span class="chip">Salvar no Google Sheets</span> para garantir persistência entre sessões.
+        </div>
+      </div>
+
+      <!-- DICAS -->
+      <div class="card" id="dicas">
+        <div class="card-hdr">
+          <span class="badge">💡 Dicas</span>
+          <h2>Dicas de Uso</h2>
+        </div>
+        <ul>
+          <li>Sempre inicie pelos ensaios de laboratório (L1 → L2 → L3) antes de preencher os materiais, para garantir dados precisos.</li>
+          <li>Salve um traço base aprovado nos slots A, B e C para comparar variações de custo sem perder o original.</li>
+          <li>Mantenha as alíquotas tributárias (ICMS/IPI) atualizadas em M1 para que o custo líquido reflita a realidade fiscal da usina.</li>
+          <li>Utilize o Cálculo Inverso (③) para retroalimentar a curva de Abrams com traços aprovados em obra.</li>
+          <li>Ao imprimir, verifique se o navegador está configurado para imprimir cores de fundo — isso garante que o cabeçalho escuro apareça no PDF.</li>
+          <li>O sistema funciona offline após o primeiro carregamento (PWA). Mas a sincronização com Google Sheets requer conexão.</li>
+          <li>Use a seção <strong>R2 · Normas</strong> como consulta rápida durante o desenvolvimento do traço.</li>
+        </ul>
+      </div>
+
+      <p style="text-align:center;font-size:.78rem;color:#94a3b8;margin-top:8px;padding-bottom:4px">
+        ConcreTrack · Pertiga · Laboratório &amp; Engenharia do Concreto · Emissão: Abril 2026
+      </p>
+
+    </div><!-- /conteúdo -->
+  </div><!-- /cols -->
+</div><!-- /page -->
+
 </body>
 </html>
