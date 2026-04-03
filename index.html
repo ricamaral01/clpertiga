@@ -2,10 +2,205 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=dosagem-clp/index.html">
-  <title>Pertiga Calculadora de Dosagem</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pertiga · Concretrack</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #c8c8c8;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.18'/%3E%3C/svg%3E");
+      background-size: 400px 400px;
+      overflow: hidden;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    /* Partículas de fundo */
+    .bg-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.18;
+      animation: orbFloat 8s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    .bg-orb-1 { width: 480px; height: 480px; background: #e8762a; top: -120px; right: -100px; animation-delay: 0s; }
+    .bg-orb-2 { width: 360px; height: 360px; background: #5a6070; bottom: -80px; left: -60px; animation-delay: -3s; }
+    .bg-orb-3 { width: 260px; height: 260px; background: #e8762a; bottom: 20%; right: 10%; animation-delay: -5s; opacity: 0.10; }
+
+    @keyframes orbFloat {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(30px, 20px) scale(1.08); }
+    }
+
+    /* Card flutuante */
+    .splash-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.70);
+      backdrop-filter: blur(28px) saturate(1.4);
+      -webkit-backdrop-filter: blur(28px) saturate(1.4);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      border-radius: 28px;
+      padding: 52px 56px 44px;
+      width: min(520px, 92vw);
+      text-align: center;
+      box-shadow:
+        0 8px 40px rgba(0,0,0,0.14),
+        0 2px 8px rgba(0,0,0,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+      animation: cardIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(36px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Linha decorativa topo */
+    .card-accent-line {
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 72px; height: 3px;
+      background: linear-gradient(90deg, #e8762a, #f5a05a, #e8762a);
+      border-radius: 0 0 4px 4px;
+    }
+
+    /* Logo PERTIGA */
+    .logo-pertiga {
+      display: block;
+      width: auto;
+      height: 78px;
+      margin: 0 auto 28px;
+      animation: logoIn 0.8s 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.12));
+    }
+
+    @keyframes logoIn {
+      from { opacity: 0; transform: translateY(-14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Divisor */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,0,0,0.10), transparent);
+      margin: 0 0 26px;
+      animation: fadeIn 0.6s 0.55s both;
+    }
+
+    /* Logo CONCRETRACK */
+    .logo-concretrack {
+      display: block;
+      width: auto;
+      height: 110px;
+      margin: 0 auto 26px;
+      animation: logoIn2 0.85s 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+      filter: drop-shadow(0 6px 18px rgba(0,0,0,0.13));
+    }
+
+    @keyframes logoIn2 {
+      from { opacity: 0; transform: scale(0.88); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* Linha de rodapé */
+    .footer-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 14px;
+      animation: fadeIn 0.6s 0.65s both;
+    }
+    .footer-label .dot {
+      width: 3px; height: 3px;
+      background: #e8762a;
+      border-radius: 50%;
+    }
+
+    /* Barra de progresso */
+    .progress-wrap {
+      width: 100%;
+      height: 3px;
+      background: rgba(0,0,0,0.10);
+      border-radius: 99px;
+      overflow: hidden;
+      animation: fadeIn 0.4s 0.7s both;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #e8762a, #f5a05a);
+      box-shadow: 0 0 10px rgba(232,118,42,0.55);
+      animation: progressFill 2.8s 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes progressFill {
+      0%   { width: 0%; }
+      60%  { width: 75%; }
+      85%  { width: 92%; }
+      100% { width: 100%; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* Fade out final */
+    body.fade-out {
+      transition: opacity 0.55s ease;
+      opacity: 0;
+    }
+  </style>
 </head>
 <body>
-  <script>window.location.replace("dosagem-clp/index.html");</script>
+
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+
+  <div class="splash-card">
+    <div class="card-accent-line"></div>
+
+    <img class="logo-pertiga" src="assets/img/clp-logo.png" alt="Pertiga">
+
+    <div class="divider"></div>
+
+    <img class="logo-concretrack" src="assets/img/logo-concretrack.png" alt="Concretrack">
+
+    <div class="footer-label">
+      <span>Concretrack</span>
+      <span class="dot"></span>
+      <span>Pertiga</span>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-bar" id="bar"></div>
+    </div>
+  </div>
+
+  <script>
+    // Redireciona após animação completar
+    setTimeout(function () {
+      document.body.classList.add('fade-out');
+      setTimeout(function () {
+        window.location.replace('dosagem-clp/index.html');
+      }, 560);
+    }, 3600);
+  </script>
 </body>
 </html>
